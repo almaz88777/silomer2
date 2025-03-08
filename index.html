@@ -164,18 +164,26 @@
         document.addEventListener("DOMContentLoaded", loadRanking);
 
         function sendToWhatsApp() {
-            const name = document.getElementById('name').value;
-            const score = document.getElementById('score').value;
-            if (!name || !score) {
-                alert('Заполните все поля!');
-                return;
-            }
-            const phoneNumber = '87088246287'; // Добавлен номер WhatsApp
-            const message = `Привет! Меня зовут ${name}, мой результат: ${score} 🎯`;
-            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappURL, '_blank');
-            closeModal();
-        }
+    const name = document.getElementById('name').value;
+    const score = document.getElementById('score').value;
+    if (!name || !score) {
+        alert('Заполните все поля!');
+        return;
+    }
+
+    const phoneNumber = '77088246287'; // Номер должен быть в международном формате БЕЗ "+"
+    const message = `Привет! Меня зовут ${name}, мой результат: ${score} 🎯`;
+
+    // Формируем ссылку
+    const whatsappURL = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+    // Выводим ссылку в консоль для проверки
+    console.log("WhatsApp URL:", whatsappURL);
+
+    // Пробуем открыть WhatsApp
+    window.location.href = whatsappURL;
+}
+
     </script>
 </body>
 </html>
