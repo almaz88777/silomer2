@@ -48,9 +48,9 @@
         td {
             background: #222;
         }
-        .gold { background: gold; color: black; border-radius: 50%; padding: 5px; }
-        .silver { background: #bfbfbf; color: black; border-radius: 50%; padding: 5px; }
-        .bronze { background: #cd7f32; color: black; border-radius: 50%; padding: 5px; }
+        .gold { background: gold !important; color: black; font-weight: bold; }
+        .silver { background: #c0c0c0 !important; color: black; font-weight: bold; }
+        .bronze { background: #cd7f32 !important; color: black; font-weight: bold; }
         .top-10 { background: rgba(255, 204, 0, 0.1); }
         tr:nth-child(even) {
             background: rgba(255, 204, 0, 0.2);
@@ -82,30 +82,6 @@
             color: #ffcc00;
             cursor: pointer;
         }
-        .modal input, .modal button {
-            width: 90%;
-            margin: 10px auto;
-            padding: 12px;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .modal input {
-            background: #333;
-            border: 2px solid #ffcc00;
-            color: #fff;
-        }
-        .modal button {
-            background: #ffcc00;
-            color: #000;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 0 10px #ffcc00;
-        }
-        .modal button:hover {
-            background: #e6b800;
-            box-shadow: 0 0 15px #e6b800;
-        }
     </style>
 </head>
 <body>
@@ -136,6 +112,46 @@
     </div>
 
     <script>
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=Лист1';
+
+        async function loadRanking() {
+            try {
+                const response = await fetch(sheetUrl);
+                const text = await response.text();
+                const json = JSON.parse(text.substring(47, text.length - 2));
+                let rows = json.table.rows;
+                
+                rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v) }))
+                           .filter(row => row.name && !isNaN(row.score))
+                           .sort((a, b) => b.score - a.score)
+                           .slice(0, 100);
+
+                const tableBody = document.getElementById('rankingTable');
+                tableBody.innerHTML = '';
+                
+                rows.forEach((row, index) => {
+                    const tr = document.createElement('tr');
+                    let rowClass = '';
+                    
+                    if (index === 0) rowClass = 'gold';
+                    else if (index === 1) rowClass = 'silver';
+                    else if (index === 2) rowClass = 'bronze';
+                    else if (index >= 3 && index < 10) rowClass = 'top-10';
+                    
+                    tr.innerHTML = `
+                        <td class="${rowClass}">${index + 1}</td>
+                        <td>${row.name}</td>
+                        <td>${row.score}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", loadRanking);
+
         function openModal() {
             document.getElementById("resultModal").style.display = "block";
         }
@@ -149,7 +165,7 @@
                 alert('Заполните все поля!');
                 return;
             }
-            const phoneNumber = '87088246287';
+            const phoneNumber = '87088246287'; // Добавлен номер WhatsApp
             const message = `Привет! Меня зовут ${name}, мой результат: ${score} 🎯`;
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             window.open(whatsappURL, '_blank');
@@ -158,7 +174,6 @@
     </script>
 </body>
 </html>
-
 
 
 
