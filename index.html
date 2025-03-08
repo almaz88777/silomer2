@@ -52,9 +52,8 @@
         .silver { background: #c0c0c0 !important; color: black; font-weight: bold; }
         .bronze { background: #cd7f32 !important; color: black; font-weight: bold; }
         .top-10 { background: rgba(255, 204, 0, 0.1); }
-        tr:nth-child(even) {
-            background: rgba(255, 204, 0, 0.2);
-        }
+        .highlight { background: rgba(255, 204, 0, 0.2); }
+        tr:hover { background: rgba(255, 204, 0, 0.3); transition: 0.3s; }
         .modal {
             display: none;
             position: fixed;
@@ -82,6 +81,25 @@
             color: #ffcc00;
             cursor: pointer;
         }
+        .whatsapp-button {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #25D366;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 20px;
+            border: 2px solid #128C7E;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 10px #128C7E;
+        }
+        .whatsapp-button:hover {
+            background: #128C7E;
+            box-shadow: 0 0 15px #25D366;
+        }
     </style>
 </head>
 <body>
@@ -100,8 +118,7 @@
             <tbody id="rankingTable"></tbody>
         </table>
     </div>
-    
-    <button onclick="openModal()">📩 Отправить результат</button>
+    <button class="whatsapp-button" onclick="openModal()">📩 Отправить результат</button>
     
     <div id="resultModal" class="modal">
         <span class="close" onclick="closeModal()">&times;</span>
@@ -123,20 +140,14 @@
                 
                 rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v) }))
                            .filter(row => row.name && !isNaN(row.score))
-                           .sort((a, b) => b.score - a.score)
-                           .slice(0, 100);
+                           .sort((a, b) => b.score - a.score);
 
                 const tableBody = document.getElementById('rankingTable');
                 tableBody.innerHTML = '';
                 
                 rows.forEach((row, index) => {
                     const tr = document.createElement('tr');
-                    let rowClass = '';
-                    
-                    if (index === 0) rowClass = 'gold';
-                    else if (index === 1) rowClass = 'silver';
-                    else if (index === 2) rowClass = 'bronze';
-                    else if (index >= 3 && index < 10) rowClass = 'top-10';
+                    let rowClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : (index >= 3 && index <= 10) || [4,6,8,10,5,7,9].includes(index) ? 'highlight' : '';
                     
                     tr.innerHTML = `
                         <td class="${rowClass}">${index + 1}</td>
@@ -152,12 +163,6 @@
 
         document.addEventListener("DOMContentLoaded", loadRanking);
 
-        function openModal() {
-            document.getElementById("resultModal").style.display = "block";
-        }
-        function closeModal() {
-            document.getElementById("resultModal").style.display = "none";
-        }
         function sendToWhatsApp() {
             const name = document.getElementById('name').value;
             const score = document.getElementById('score').value;
