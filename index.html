@@ -19,28 +19,13 @@
             text-transform: uppercase;
             text-shadow: 0 0 10px #ffcc00;
         }
-        table { 
-            width: 80%; 
-            margin: 20px auto; 
-            border-collapse: collapse; 
-            background: rgba(0, 0, 0, 0.8);
+        iframe {
+            width: 90%;
+            height: 500px;
+            border: 2px solid #ffcc00;
+            margin: 20px auto;
+            display: block;
             box-shadow: 0 4px 15px rgba(255, 204, 0, 0.9);
-            border-radius: 10px;
-            overflow: hidden;
-            animation: fadeIn 1s ease-in-out;
-        }
-        th, td { 
-            border: 2px solid #ffcc00; 
-            padding: 12px; 
-            text-align: center;
-        }
-        th {
-            background: #ffcc00;
-            color: #000;
-            font-size: 18px;
-        }
-        tr:nth-child(even) {
-            background: rgba(255, 204, 0, 0.2);
         }
         form { 
             margin: 20px auto; 
@@ -75,28 +60,13 @@
             background: #e6b800;
             box-shadow: 0 0 15px #e6b800;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
 <body>
     <h1>🏆 Рейтинг Силомера 🏆</h1>
     
     <h2>Таблица рекордов</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Место</th>
-                <th>Имя</th>
-                <th>Результат</th>
-            </tr>
-        </thead>
-        <tbody id="rankingTable">
-            <!-- Данные из Google Таблицы -->
-        </tbody>
-    </table>
+    <iframe src="https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/pubhtml" allowfullscreen></iframe>
 
     <h2>📩 Отправить свой результат</h2>
     <form id="submitForm">
@@ -116,7 +86,7 @@
                 return;
             }
             
-            const phoneNumber = '77001234567'; // Заменить на ваш номер WhatsApp
+            const phoneNumber = '87088246287'; // Заменить на ваш номер WhatsApp
             const message = `Привет! Меня зовут ${name}, мой результат: ${score} 🎯`;
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             
