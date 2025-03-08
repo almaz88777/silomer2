@@ -40,15 +40,18 @@
             border: 1px solid #ffcc00;
         }
         th {
-            background: #ffcc00;
+            background: #ffcc66; /* Желтоватый цвет заголовков */
             color: #000;
             font-size: 18px;
             border-radius: 10px 10px 0 0;
         }
-        .gold { background: gold; color: black; font-weight: bold; }
-        .silver { background: #d9d9d9; color: black; font-weight: bold; } /* Сделал серебро светлее */
-        .bronze { background: #cd7f32; color: black; font-weight: bold; }
-        .top-100 { background: rgba(255, 204, 0, 0.1); }
+        td {
+            background: #222; /* Темноватый фон для всех строк */
+        }
+        .gold { border: 3px solid gold; border-radius: 50%; }
+        .silver { border: 3px solid #bfbfbf; border-radius: 50%; }
+        .bronze { border: 3px solid #cd7f32; border-radius: 50%; }
+        .top-10 { background: rgba(255, 204, 0, 0.1); }
         tr:nth-child(even) {
             background: rgba(255, 204, 0, 0.2);
         }
@@ -106,13 +109,6 @@
         </table>
     </div>
 
-    <h2>📩 Отправить свой результат</h2>
-    <form id="submitForm">
-        <input type="text" id="name" placeholder="Введите ваше имя" required>
-        <input type="number" id="score" placeholder="Введите ваш результат" required>
-        <button type="submit">Отправить в WhatsApp</button>
-    </form>
-
     <script>
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=Лист1';
 
@@ -126,7 +122,7 @@
                 rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v) }))
                            .filter(row => row.name && !isNaN(row.score))
                            .sort((a, b) => b.score - a.score)
-                           .slice(0, 100); // Ограничиваем до ТОП-100
+                           .slice(0, 100);
 
                 const tableBody = document.getElementById('rankingTable');
                 tableBody.innerHTML = '';
@@ -138,11 +134,10 @@
                     if (index === 0) rowClass = 'gold';
                     else if (index === 1) rowClass = 'silver';
                     else if (index === 2) rowClass = 'bronze';
-                    else if (index < 100) rowClass = 'top-100';
+                    else if (index >= 3 && index < 10) rowClass = 'top-10';
                     
-                    tr.classList.add(rowClass);
                     tr.innerHTML = `
-                        <td>${index + 1}</td>
+                        <td class="${rowClass}">${index + 1}</td>
                         <td>${row.name}</td>
                         <td>${row.score}</td>
                     `;
@@ -157,5 +152,6 @@
     </script>
 </body>
 </html>
+
 
 
