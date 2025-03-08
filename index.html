@@ -51,7 +51,7 @@
         .gold { background: gold !important; color: black; font-weight: bold; }
         .silver { background: #c0c0c0 !important; color: black; font-weight: bold; }
         .bronze { background: #cd7f32 !important; color: black; font-weight: bold; }
-        .top-14 { background: rgba(255, 204, 0, 0.1); }
+        .top-10 { background: rgba(255, 204, 0, 0.1); }
         .highlight { background: rgba(255, 204, 0, 0.2); }
         tr:hover { background: rgba(255, 204, 0, 0.3); transition: 0.3s; }
         .whatsapp-button {
@@ -91,9 +91,7 @@
             <tbody id="rankingTable"></tbody>
         </table>
     </div>
-    <a id="whatsappLink" href="#" target="_blank">
-        <button class="whatsapp-button" onclick="sendToWhatsApp()">📩 Отправить результат</button>
-    </a>
+    <button class="whatsapp-button" onclick="sendToWhatsApp()">📩 Отправить результат</button>
 
     <script>
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=Лист1';
@@ -114,7 +112,7 @@
                 
                 rows.forEach((row, index) => {
                     const tr = document.createElement('tr');
-                    let rowClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : (index >= 3 && index <= 14) ? 'highlight' : '';
+                    let rowClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : (index >= 3 && index <= 10) ? 'highlight' : '';
                     
                     tr.innerHTML = `
                         <td class="${rowClass}">${index + 1}</td>
@@ -131,17 +129,13 @@
         document.addEventListener("DOMContentLoaded", loadRanking);
 
         function sendToWhatsApp() {
-            const phoneNumber = '77088246287';
-            const message = 'Привет! Мое имя - Мой результат - !';
+            const phoneNumber = '87088246287';
+            const message = 'Привет! Хочу узнать мой результат в рейтинге силомера!';
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             
-            document.getElementById('whatsappLink').href = whatsappURL;
-            setTimeout(() => {
-                window.open(whatsappURL, '_blank');
-            }, 500);
+            window.location.href = whatsappURL;
         }
     </script>
 </body>
 </html>
-
 
