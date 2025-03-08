@@ -54,33 +54,6 @@
         .top-10 { background: rgba(255, 204, 0, 0.1); }
         .highlight { background: rgba(255, 204, 0, 0.2); }
         tr:hover { background: rgba(255, 204, 0, 0.3); transition: 0.3s; }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 10;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 400px;
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(255, 204, 0, 0.9);
-            text-align: center;
-        }
-        .modal h2 {
-            color: #ffcc00;
-            margin-bottom: 10px;
-        }
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 24px;
-            color: #ffcc00;
-            cursor: pointer;
-        }
         .whatsapp-button {
             position: fixed;
             bottom: 20px;
@@ -118,15 +91,7 @@
             <tbody id="rankingTable"></tbody>
         </table>
     </div>
-    <button class="whatsapp-button" onclick="openModal()">📩 Отправить результат</button>
-    
-    <div id="resultModal" class="modal">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2>📩 Введите данные</h2>
-        <input type="text" id="name" placeholder="Введите ваше имя" required>
-        <input type="number" id="score" placeholder="Введите ваш результат" required>
-        <button onclick="sendToWhatsApp()">Отправить в WhatsApp</button>
-    </div>
+    <button class="whatsapp-button" onclick="sendToWhatsApp()">📩 Отправить результат</button>
 
     <script>
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=Лист1';
@@ -147,7 +112,7 @@
                 
                 rows.forEach((row, index) => {
                     const tr = document.createElement('tr');
-                    let rowClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : (index >= 3 && index <= 10)  'highlight' : '';
+                    let rowClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : (index >= 3 && index <= 10) ? 'highlight' : '';
                     
                     tr.innerHTML = `
                         <td class="${rowClass}">${index + 1}</td>
@@ -164,30 +129,13 @@
         document.addEventListener("DOMContentLoaded", loadRanking);
 
         function sendToWhatsApp() {
-    const name = document.getElementById('name').value;
-    const score = document.getElementById('score').value;
-    if (!name || !score) {
-        alert('Заполните все поля!');
-        return;
-    }
-
-    const phoneNumber = '77088246287'; // Номер должен быть в международном формате БЕЗ "+"
-    const message = `Привет! Меня зовут ${name}, мой результат: ${score} 🎯`;
-
-    // Формируем ссылку
-    const whatsappURL = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
-
-    // Выводим ссылку в консоль для проверки
-    console.log("WhatsApp URL:", whatsappURL);
-
-    // Пробуем открыть WhatsApp
-    window.location.href = whatsappURL;
-}
-
+            const phoneNumber = '87088246287';
+            const message = 'Привет! Хочу узнать мой результат в рейтинге силомера!';
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappURL, '_blank');
+        }
     </script>
 </body>
 </html>
-
-
 
 
