@@ -46,9 +46,9 @@
             border-radius: 10px 10px 0 0;
         }
         .gold { background: gold; color: black; font-weight: bold; }
-        .silver { background: silver; color: black; font-weight: bold; }
+        .silver { background: #d9d9d9; color: black; font-weight: bold; } /* Сделал серебро светлее */
         .bronze { background: #cd7f32; color: black; font-weight: bold; }
-        .top-10 { background: rgba(255, 204, 0, 0.2); }
+        .top-100 { background: rgba(255, 204, 0, 0.1); }
         tr:nth-child(even) {
             background: rgba(255, 204, 0, 0.2);
         }
@@ -123,10 +123,10 @@
                 const json = JSON.parse(text.substring(47, text.length - 2));
                 let rows = json.table.rows;
                 
-                // Сортировка по убыванию результата
                 rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v) }))
                            .filter(row => row.name && !isNaN(row.score))
-                           .sort((a, b) => b.score - a.score);
+                           .sort((a, b) => b.score - a.score)
+                           .slice(0, 100); // Ограничиваем до ТОП-100
 
                 const tableBody = document.getElementById('rankingTable');
                 tableBody.innerHTML = '';
@@ -138,7 +138,7 @@
                     if (index === 0) rowClass = 'gold';
                     else if (index === 1) rowClass = 'silver';
                     else if (index === 2) rowClass = 'bronze';
-                    else if (index < 10) rowClass = 'top-10';
+                    else if (index < 100) rowClass = 'top-100';
                     
                     tr.classList.add(rowClass);
                     tr.innerHTML = `
@@ -154,24 +154,8 @@
         }
 
         document.addEventListener("DOMContentLoaded", loadRanking);
-
-        document.getElementById('submitForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const name = document.getElementById('name').value;
-            const score = document.getElementById('score').value;
-            
-            if (!name || !score) {
-                alert('Заполните все поля!');
-                return;
-            }
-            
-            const phoneNumber = '87088246287';
-            const message = `Привет! Меня зовут ${name}, мой результат: ${score} 🎯`;
-            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            
-            window.open(whatsappURL, '_blank');
-        });
     </script>
 </body>
 </html>
+
 
