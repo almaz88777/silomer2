@@ -130,9 +130,10 @@
 
         function sendToWhatsApp() {
             const phoneNumber = '87088246287';
-            const message = 'Привет! Хочу узнать мой результат в рейтинге силомера!';
+            const message = 'Привет! Мое Имя: , а результат: !';
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappURL, '_blank');
+            
+            window.location.href = whatsappURL; // Исправлено для мобильных устройств
         }
     </script>
 </body>
