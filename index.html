@@ -40,53 +40,45 @@
             border: 1px solid #ffcc00;
         }
         th {
-            background: #ffcc66; /* Желтоватый цвет заголовков */
+            background: #ffcc66;
             color: #000;
             font-size: 18px;
             border-radius: 10px 10px 0 0;
         }
         td {
-            background: #222; /* Темноватый фон для всех строк */
+            background: #222;
         }
-        .gold { border: 3px solid gold; border-radius: 50%; }
-        .silver { border: 3px solid #bfbfbf; border-radius: 50%; }
-        .bronze { border: 3px solid #cd7f32; border-radius: 50%; }
+        .gold { background: gold; color: black; border-radius: 50%; padding: 5px; }
+        .silver { background: #bfbfbf; color: black; border-radius: 50%; padding: 5px; }
+        .bronze { background: #cd7f32; color: black; border-radius: 50%; padding: 5px; }
         .top-10 { background: rgba(255, 204, 0, 0.1); }
         tr:nth-child(even) {
             background: rgba(255, 204, 0, 0.2);
         }
-        form { 
-            margin: 20px auto; 
-            width: 350px; 
-            display: flex; 
-            flex-direction: column;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 25px;
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #222;
+            padding: 20px;
             border-radius: 10px;
+            text-align: center;
             box-shadow: 0 4px 15px rgba(255, 204, 0, 0.9);
         }
-        input, button { 
-            margin: 10px 0; 
-            padding: 12px; 
-            border: 2px solid #ffcc00;
-            border-radius: 5px;
-            background: #222;
-            color: #fff;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-        button {
-            background: #ffcc00;
-            color: #000;
-            font-weight: bold;
-            font-size: 18px;
+        .close {
+            color: #ffcc00;
+            float: right;
+            font-size: 28px;
             cursor: pointer;
-            border: none;
-            box-shadow: 0 0 10px #ffcc00;
-        }
-        button:hover {
-            background: #e6b800;
-            box-shadow: 0 0 15px #e6b800;
         }
     </style>
 </head>
@@ -103,55 +95,46 @@
                     <th>Результат</th>
                 </tr>
             </thead>
-            <tbody id="rankingTable">
-                <!-- Данные из Google Таблицы -->
-            </tbody>
+            <tbody id="rankingTable"></tbody>
         </table>
+    </div>
+    
+    <button onclick="openModal()">📩 Отправить результат</button>
+    
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>📩 Введите данные</h2>
+            <input type="text" id="name" placeholder="Введите ваше имя" required>
+            <input type="number" id="score" placeholder="Введите ваш результат" required>
+            <button onclick="sendToWhatsApp()">Отправить в WhatsApp</button>
+        </div>
     </div>
 
     <script>
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=Лист1';
-
-        async function loadRanking() {
-            try {
-                const response = await fetch(sheetUrl);
-                const text = await response.text();
-                const json = JSON.parse(text.substring(47, text.length - 2));
-                let rows = json.table.rows;
-                
-                rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v) }))
-                           .filter(row => row.name && !isNaN(row.score))
-                           .sort((a, b) => b.score - a.score)
-                           .slice(0, 100);
-
-                const tableBody = document.getElementById('rankingTable');
-                tableBody.innerHTML = '';
-                
-                rows.forEach((row, index) => {
-                    const tr = document.createElement('tr');
-                    let rowClass = '';
-                    
-                    if (index === 0) rowClass = 'gold';
-                    else if (index === 1) rowClass = 'silver';
-                    else if (index === 2) rowClass = 'bronze';
-                    else if (index >= 3 && index < 10) rowClass = 'top-10';
-                    
-                    tr.innerHTML = `
-                        <td class="${rowClass}">${index + 1}</td>
-                        <td>${row.name}</td>
-                        <td>${row.score}</td>
-                    `;
-                    tableBody.appendChild(tr);
-                });
-            } catch (error) {
-                console.error('Ошибка загрузки данных:', error);
-            }
+        function openModal() {
+            document.getElementById("resultModal").style.display = "flex";
         }
-
-        document.addEventListener("DOMContentLoaded", loadRanking);
+        function closeModal() {
+            document.getElementById("resultModal").style.display = "none";
+        }
+        function sendToWhatsApp() {
+            const name = document.getElementById('name').value;
+            const score = document.getElementById('score').value;
+            if (!name || !score) {
+                alert('Заполните все поля!');
+                return;
+            }
+            const phoneNumber = '87088246287';
+            const message = `Привет! Меня зовут ${name}, мой результат: ${score} 🎯`;
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappURL, '_blank');
+            closeModal();
+        }
     </script>
 </body>
 </html>
+
 
 
 
