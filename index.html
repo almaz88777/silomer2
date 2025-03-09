@@ -63,10 +63,14 @@
             cursor: pointer;
             box-shadow: 0 0 10px #128C7E;
         }
+        .whatsapp-button:hover {
+            background: #128C7E;
+            box-shadow: 0 0 15px #25D366;
+        }
         .filter-buttons {
             margin: 15px;
         }
-        .filter-buttons button {
+        .filter-buttons select, .filter-buttons button {
             padding: 10px 15px;
             font-size: 16px;
             margin: 5px;
@@ -84,8 +88,10 @@
     
     <h2>Таблица рекордов</h2>
     <div class="filter-buttons">
-        <button onclick="filterResults('month')">За месяц</button>
-        <button onclick="filterResults('all')">За всё время</button>
+        <select id="monthSelect" onchange="filterResults()">
+            <option value="all">За всё время</option>
+            <option value="current">За месяц</option>
+        </select>
     </div>
     <div class="table-container">
         <table>
@@ -102,7 +108,7 @@
     <button class="whatsapp-button" onclick="sendToWhatsApp()">📩 Отправить результат</button>
 
     <script>
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=Лист1';
+        const sheetUrl = ''https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=Лист1'';
 
         async function loadRanking() {
             try {
@@ -111,25 +117,32 @@
                 const json = JSON.parse(text.substring(47, text.length - 2));
                 let rows = json.table.rows;
                 
-                rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v), date: new Date(row.c[2]?.v) }))
-                           .filter(row => row.name && !isNaN(row.score));
+                rows = rows.map(row => {
+                    const name = row.c[0]?.v;
+                    const score = parseInt(row.c[1]?.v);
+                    const dateValue = row.c[2]?.v;
+                    const date = dateValue ? new Date(dateValue) : null;
+                    return { name, score, date };
+                }).filter(row => row.name && !isNaN(row.score) && row.date);
 
                 window.allResults = rows;
-                filterResults('all');
+                filterResults();
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
             }
         }
 
-        function filterResults(type) {
+        function filterResults() {
             let filtered = [...window.allResults];
-            if (type === 'month') {
-                const dateLimit = new Date();
-                dateLimit.setDate(dateLimit.getDate() - 30);
-                filtered = filtered.filter(row => row.date >= dateLimit);
+            const selectedFilter = document.getElementById('monthSelect').value;
+            const currentMonth = new Date().getMonth();
+            
+            if (selectedFilter === 'current') {
+                filtered = filtered.filter(row => row.date.getMonth() === currentMonth);
             }
+            
             filtered.sort((a, b) => b.score - a.score);
-
+            
             const tableBody = document.getElementById('rankingTable');
             tableBody.innerHTML = filtered.map((row, index) => `
                 <tr>
@@ -140,7 +153,7 @@
         }
 
         function sendToWhatsApp() {
-            const phoneNumber = '+77088246287'; // Твой номер
+            const phoneNumber = '+77001234567';
             const message = encodeURIComponent('Я хочу отправить свой результат!');
             window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
         }
@@ -149,4 +162,3 @@
     </script>
 </body>
 </html>
-
