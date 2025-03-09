@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  ее<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -129,11 +129,11 @@
         document.addEventListener("DOMContentLoaded", loadRanking);
 
         function sendToWhatsApp() {
-            const phoneNumber = '87088246287';
-            const message = 'Привет! Хочу узнать мой результат в рейтинге силомера!';
+            const phoneNumber = '77088246287';
+            const message = 'Привет!Отправь мне Имя ,Результат , Фото ';
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             
-            window.location.href = whatsappURL;
+            window.open(whatsappURL, "_blank");
         }
     </script>
 </body>
