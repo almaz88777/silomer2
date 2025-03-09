@@ -1,4 +1,4 @@
-  ее<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -47,6 +47,13 @@
         }
         td {
             background: #222;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .fade-in {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
         }
         .gold { background: gold !important; color: black; font-weight: bold; }
         .silver { background: #c0c0c0 !important; color: black; font-weight: bold; }
@@ -73,12 +80,33 @@
             background: #128C7E;
             box-shadow: 0 0 15px #25D366;
         }
+        .filter-buttons {
+            margin: 20px 0;
+        }
+        .filter-buttons button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #ffcc00;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .filter-buttons button:hover {
+            background: #e6b800;
+        }
     </style>
 </head>
 <body>
     <h1>🏆 Рейтинг Силомера 🏆</h1>
     
     <h2>Таблица рекордов</h2>
+    <div class="filter-buttons">
+        <button onclick="loadRanking('month')">За месяц</button>
+        <button onclick="loadRanking('year')">За год</button>
+        <button onclick="loadRanking('all')">Все</button>
+    </div>
     <div class="table-container">
         <table>
             <thead>
@@ -96,45 +124,49 @@
     <script>
         const sheetUrl = 'https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=Лист1';
 
-        async function loadRanking() {
+        async function loadRanking(filter = 'all') {
             try {
                 const response = await fetch(sheetUrl);
                 const text = await response.text();
                 const json = JSON.parse(text.substring(47, text.length - 2));
                 let rows = json.table.rows;
                 
-                rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v) }))
-                           .filter(row => row.name && !isNaN(row.score))
-                           .sort((a, b) => b.score - a.score);
+                rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v), date: row.c[2]?.v }))
+                           .filter(row => row.name && !isNaN(row.score));
+                
+                if (filter === 'month') {
+                    let dateLimit = new Date();
+                    dateLimit.setMonth(dateLimit.getMonth() - 1);
+                    rows = rows.filter(row => new Date(row.date) >= dateLimit);
+                } else if (filter === 'year') {
+                    let dateLimit = new Date();
+                    dateLimit.setFullYear(dateLimit.getFullYear() - 1);
+                    rows = rows.filter(row => new Date(row.date) >= dateLimit);
+                }
+                
+                rows.sort((a, b) => b.score - a.score);
 
                 const tableBody = document.getElementById('rankingTable');
                 tableBody.innerHTML = '';
                 
                 rows.forEach((row, index) => {
                     const tr = document.createElement('tr');
-                    let rowClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : (index >= 3 && index <= 9) ? 'highlight' : '';
+                    let rowClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
                     
                     tr.innerHTML = `
                         <td class="${rowClass}">${index + 1}</td>
                         <td>${row.name}</td>
                         <td>${row.score}</td>
                     `;
+                    
                     tableBody.appendChild(tr);
+                    setTimeout(() => tr.classList.add('fade-in'), index * 100);
                 });
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
             }
         }
-
-        document.addEventListener("DOMContentLoaded", loadRanking);
-
-        function sendToWhatsApp() {
-            const phoneNumber = '77088246287';
-            const message = 'Привет!Отправь мне Имя ,Результат , Фото ';
-            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            
-            window.open(whatsappURL, "_blank");
-        }
+        document.addEventListener("DOMContentLoaded", () => loadRanking());
     </script>
 </body>
 </html>
