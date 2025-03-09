@@ -133,7 +133,7 @@
                 const json = JSON.parse(text.substring(47, text.length - 2));
                 let rows = json.table.rows;
                 
-                rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v), date: row.c[2]?.v }))
+                rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v), date: row.c[2]?.f || row.c[2]?.v }))
                            .filter(row => row.name && !isNaN(row.score));
                 
                 if (filter === 'month') {
@@ -168,3 +168,4 @@
     </script>
 </body>
 </html>
+
