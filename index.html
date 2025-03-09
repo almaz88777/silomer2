@@ -48,18 +48,6 @@
         td {
             background: #222;
         }
-        .gold { background: gold !important; color: black; font-weight: bold; }
-        .silver { background: #c0c0c0 !important; color: black; font-weight: bold; }
-        .bronze { background: #cd7f32 !important; color: black; font-weight: bold; }
-        .top-9 { background: rgba(255, 204, 0, 0.1); }
-        .highlight { background: rgba(255, 204, 0, 0.2); }
-        tr {
-            transition: transform 0.3s ease, background 0.3s ease;
-        }
-        tr:hover {
-            transform: scale(1.02);
-            background: rgba(255, 204, 0, 0.3);
-        }
         .whatsapp-button {
             position: fixed;
             bottom: 20px;
@@ -75,10 +63,6 @@
             cursor: pointer;
             box-shadow: 0 0 10px #128C7E;
         }
-        .whatsapp-button:hover {
-            background: #128C7E;
-            box-shadow: 0 0 15px #25D366;
-        }
         .filter-buttons {
             margin: 15px;
         }
@@ -92,16 +76,6 @@
             background: #ffcc00;
             color: black;
             font-weight: bold;
-        }
-        @media (max-width: 600px) {
-            th, td {
-                padding: 10px;
-                font-size: 14px;
-            }
-            .whatsapp-button {
-                font-size: 16px;
-                padding: 10px 15px;
-            }
         }
     </style>
 </head>
@@ -150,9 +124,9 @@
         function filterResults(type) {
             let filtered = [...window.allResults];
             if (type === 'month') {
-                const monthAgo = new Date();
-                monthAgo.setMonth(monthAgo.getMonth() - 1);
-                filtered = filtered.filter(row => row.date >= monthAgo);
+                const dateLimit = new Date();
+                dateLimit.setDate(dateLimit.getDate() - 30);
+                filtered = filtered.filter(row => row.date >= dateLimit);
             }
             filtered.sort((a, b) => b.score - a.score);
 
@@ -166,7 +140,7 @@
         }
 
         function sendToWhatsApp() {
-            const phoneNumber = '+77088246287'; // Укажи свой номер
+            const phoneNumber = '+77088246287'; // Твой номер
             const message = encodeURIComponent('Я хочу отправить свой результат!');
             window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
         }
@@ -175,3 +149,4 @@
     </script>
 </body>
 </html>
+
