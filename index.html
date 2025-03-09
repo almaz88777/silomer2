@@ -79,6 +79,20 @@
             background: #128C7E;
             box-shadow: 0 0 15px #25D366;
         }
+        .filter-buttons {
+            margin: 15px;
+        }
+        .filter-buttons button {
+            padding: 10px 15px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background: #ffcc00;
+            color: black;
+            font-weight: bold;
+        }
         @media (max-width: 600px) {
             th, td {
                 padding: 10px;
@@ -95,6 +109,10 @@
     <h1>🏆 Рейтинг Силомера 🏆</h1>
     
     <h2>Таблица рекордов</h2>
+    <div class="filter-buttons">
+        <button onclick="filterResults('month')">За месяц</button>
+        <button onclick="filterResults('all')">За всё время</button>
+    </div>
     <div class="table-container">
         <table>
             <thead>
@@ -110,7 +128,7 @@
     <button class="whatsapp-button" onclick="sendToWhatsApp()">📩 Отправить результат</button>
 
     <script>
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=Лист1';
+        const sheetUrl = 'https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/gviz/tq?tqx=out:json&sheet=Лист1';
 
         async function loadRanking() {
             try {
@@ -119,38 +137,41 @@
                 const json = JSON.parse(text.substring(47, text.length - 2));
                 let rows = json.table.rows;
                 
-                rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v) }))
-                           .filter(row => row.name && !isNaN(row.score))
-                           .sort((a, b) => b.score - a.score);
+                rows = rows.map(row => ({ name: row.c[0]?.v, score: parseInt(row.c[1]?.v), date: new Date(row.c[2]?.v) }))
+                           .filter(row => row.name && !isNaN(row.score));
 
-                const tableBody = document.getElementById('rankingTable');
-                tableBody.innerHTML = '';
-                
-                rows.forEach((row, index) => {
-                    const tr = document.createElement('tr');
-                    let rowClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : (index >= 3 && index <= 9) ? 'highlight' : '';
-                    
-                    tr.innerHTML = `
-                        <td class="${rowClass}">${index + 1}</td>
-                        <td>${row.name}</td>
-                        <td>${row.score}</td>
-                    `;
-                    tableBody.appendChild(tr);
-                });
+                window.allResults = rows;
+                filterResults('all');
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
             }
         }
 
-        document.addEventListener("DOMContentLoaded", loadRanking);
+        function filterResults(type) {
+            let filtered = [...window.allResults];
+            if (type === 'month') {
+                const monthAgo = new Date();
+                monthAgo.setMonth(monthAgo.getMonth() - 1);
+                filtered = filtered.filter(row => row.date >= monthAgo);
+            }
+            filtered.sort((a, b) => b.score - a.score);
+
+            const tableBody = document.getElementById('rankingTable');
+            tableBody.innerHTML = filtered.map((row, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${row.name}</td>
+                    <td>${row.score}</td>
+                </tr>`).join('');
+        }
 
         function sendToWhatsApp() {
-            const phoneNumber = '77088246287';
-            const message = 'Привет!Отправь мне Имя ,Результат , Фото ';
-            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            
-            window.open(whatsappURL, "_blank");
+            const phoneNumber = '+77088246287'; // Укажи свой номер
+            const message = encodeURIComponent('Я хочу отправить свой результат!');
+            window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
         }
+
+        document.addEventListener("DOMContentLoaded", loadRanking);
     </script>
 </body>
 </html>
