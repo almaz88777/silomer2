@@ -51,7 +51,7 @@
         .gold { background: gold !important; color: black; font-weight: bold; }
         .silver { background: #c0c0c0 !important; color: black; font-weight: bold; }
         .bronze { background: #cd7f32 !important; color: black; font-weight: bold; }
-        .top-10 { background: rgba(255, 204, 0, 0.1); }
+        .top-9 { background: rgba(255, 204, 0, 0.1); }
         .highlight { background: rgba(255, 204, 0, 0.2); }
         tr:hover { background: rgba(255, 204, 0, 0.3); transition: 0.3s; }
         .whatsapp-button {
@@ -112,7 +112,7 @@
                 
                 rows.forEach((row, index) => {
                     const tr = document.createElement('tr');
-                    let rowClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : (index >= 3 && index <= 10) ? 'highlight' : '';
+                    let rowClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : (index >= 3 && index <= 9) ? 'highlight' : '';
                     
                     tr.innerHTML = `
                         <td class="${rowClass}">${index + 1}</td>
