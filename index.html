@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  ее<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -38,9 +38,6 @@
             padding: 15px; 
             text-align: center;
             border: 1px solid #ffcc00;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
         }
         th {
             background: #ffcc66;
@@ -123,15 +120,6 @@
                         <td>${row.score}</td>
                     `;
                     tableBody.appendChild(tr);
-                    
-                    setTimeout(() => {
-                        tr.children[0].style.opacity = '1';
-                        tr.children[1].style.opacity = '1';
-                        tr.children[2].style.opacity = '1';
-                        tr.children[0].style.transform = 'translateY(0)';
-                        tr.children[1].style.transform = 'translateY(0)';
-                        tr.children[2].style.transform = 'translateY(0)';
-                    }, index * 100);
                 });
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
@@ -142,7 +130,7 @@
 
         function sendToWhatsApp() {
             const phoneNumber = '77088246287';
-            const message = 'Привет! Отправь мне Имя, Результат, Фото';
+            const message = 'Привет!Отправь мне Имя ,Результат , Фото ';
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
             
             window.open(whatsappURL, "_blank");
