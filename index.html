@@ -79,20 +79,33 @@
             background: #128C7E;
             box-shadow: 0 0 15px #25D366;
         }
-        @media (max-width: 600px) {
-            th, td {
-                padding: 10px;
-                font-size: 14px;
-            }
-            .whatsapp-button {
-                font-size: 16px;
-                padding: 10px 15px;
-            }
+        .filter-buttons {
+            margin-bottom: 20px;
+        }
+        .filter-button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: #ffcc00;
+            color: black;
+            font-weight: bold;
+            box-shadow: 0 0 5px #ffcc00;
+        }
+        .filter-button:hover {
+            background: #ffdb4d;
         }
     </style>
 </head>
 <body>
     <h1>🏆 Рейтинг Силомера 🏆</h1>
+    
+    <div class="filter-buttons">
+        <button class="filter-button" onclick="loadRanking('Лист1')">За всё время</button>
+        <button class="filter-button" onclick="loadRanking('Лист2')">За месяц</button>
+    </div>
     
     <h2>Таблица рекордов</h2>
     <div class="table-container">
@@ -110,9 +123,8 @@
     <button class="whatsapp-button" onclick="sendToWhatsApp()">📩 Отправить результат</button>
 
     <script>
-        const sheetUrl = 'https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=Лист1';
-
-        async function loadRanking() {
+        async function loadRanking(sheetName) {
+            const sheetUrl = `https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=${sheetName}`;
             try {
                 const response = await fetch(sheetUrl);
                 const text = await response.text();
@@ -141,14 +153,13 @@
                 console.error('Ошибка загрузки данных:', error);
             }
         }
-
-        document.addEventListener("DOMContentLoaded", loadRanking);
+        
+        document.addEventListener("DOMContentLoaded", () => loadRanking('Лист1'));
 
         function sendToWhatsApp() {
             const phoneNumber = '77088246287';
-            const message = 'Привет!Отправь мне Имя ,Результат , Фото ';
+            const message = 'Привет! Отправь мне Имя, Результат, Фото';
             const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            
             window.open(whatsappURL, "_blank");
         }
     </script>
