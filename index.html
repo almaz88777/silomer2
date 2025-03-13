@@ -136,7 +136,7 @@
 
     <script>
         async function loadRanking(sheetName) {
-            const sheetUrl = `https://docs.google.com/spreadsheets/d/1N33RD08kPghWrUZwMlPc_K7VI5eGTYhGTRzJfgf8hkM/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+            const sheetUrl = 'https://docs.google.com/spreadsheets/d/1Xi4_G9-cbFWzGswbQJhq2TZShUH1ZuB5-INMx0u-SlI/edit?gid=0#gid=0`;
             try {
                 const response = await fetch(sheetUrl);
                 const text = await response.text();
